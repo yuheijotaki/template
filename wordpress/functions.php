@@ -2,6 +2,12 @@
 
 
 
+
+
+// ----------------------------------------
+// スマホ振り分け
+// ----------------------------------------
+
 // スマホ振り分け
 function detect_sp() {
 	$agent = @$_SERVER['HTTP_USER_AGENT'];
@@ -18,6 +24,12 @@ function detect_sp() {
 }
 
 
+
+
+
+// ----------------------------------------
+// デフォルトの出力ソース制御
+// ----------------------------------------
 
 // 不要なwp_headを削除
 remove_action('wp_head', 'feed_links_extra',3);
@@ -40,9 +52,33 @@ remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
 
 
 
-//////////////////////////////
-// カスタム投稿タイプ タクソノミー追加
-//////////////////////////////
+// 固定ページで自動整形機能を無効化
+function disable_page_wpautop() {
+	if ( is_page() ) remove_filter( 'the_content', 'wpautop' );
+}
+add_action( 'wp', 'disable_page_wpautop' );
+
+
+
+
+
+// ----------------------------------------
+// サムネイル
+// ----------------------------------------
+
+// サムネイル カスタムサイズ
+add_theme_support('post-thumbnails');
+if ( function_exists( 'add_image_size' ) ) {
+	add_image_size('thumb', 600, 600, true);
+}
+
+
+
+
+
+// ----------------------------------------
+// カスタム投稿タイプ
+// ----------------------------------------
 
 // カスタム投稿タイプ POST_TYPE_NAME
 register_post_type( 'POST_TYPE_NAME',
@@ -68,7 +104,7 @@ register_taxonomy(
 		'label' => 'POST_TYPE_NAMEのカテゴリー',
 		'singular_label' => 'POST_TYPE_NAMEのカテゴリー',
 		'rewrite' => array(
-			'slug' => 'seminar_category'
+			'slug' => 'POST_TYPE_NAME_category'
 		),
 		'public' => true,
 		'show_ui' => true
@@ -87,50 +123,6 @@ function custom_post_rss_set($query) {
 	}
 }
 add_filter('pre_get_posts', 'custom_post_rss_set');
-
-
-
-// ACF PRO オプションページ
-if( function_exists('acf_add_options_page') ) {
-	$option_page = acf_add_options_page(array(
-		'page_title' => 'オプションページ名',
-		'menu_title' => 'オプションページ名',
-		'menu_slug' => 'OPTION_PAGE_NAME',
-		'capability' => 'edit_posts',
-		'redirect' => false
-	));
-}
-
-
-
-// 管理ツールバーを常に非表示
-// show_admin_bar( false );
-
-
-
-// 管理画面にファビコンを表示
-function admin_favicon() {
-	echo '<link rel="shortcut icon" type="image/x-icon" href="'.get_bloginfo('template_url').'/images/favicon.ico" />';
-}
-add_action('admin_head', 'admin_favicon');
-
-
-
-// 管理画面のメニューを非表示
-function remove_admin_menus() {
-	global $menu;
-	// unset($menu[2]); // ダッシュボード
-	// unset($menu[5]); // 投稿
-	// unset($menu[10]); // メディア
-	// unset($menu[20]); // 固定ページ
-	// unset($menu[25]); // コメント
-	// unset($menu[60]); // 外観
-	// unset($menu[65]); // プラグイン
-	// unset($menu[70]); // ユーザー
-	// unset($menu[75]); // ツール
-	// unset($menu[80]); // 設定
-}
-add_action('admin_menu', 'remove_admin_menus');
 
 
 
@@ -165,6 +157,68 @@ add_action( 'admin_print_styles', 'my_dashboard_print_styles' );
 
 
 
+
+
+// ----------------------------------------
+// Advanced Custom Fields
+// ----------------------------------------
+
+// ACF PRO オプションページ
+if( function_exists('acf_add_options_page') ) {
+	$option_page = acf_add_options_page(array(
+		'page_title' => 'オプションページ名',
+		'menu_title' => 'オプションページ名',
+		'menu_slug' => 'OPTION_PAGE_NAME',
+		'capability' => 'edit_posts',
+		'redirect' => false
+	));
+}
+
+
+
+
+
+// ----------------------------------------
+// MW WP FORM
+// ----------------------------------------
+
+// エラーメッセージの文言変更
+function englishform_error_message( $error, $key, $rule ) {
+if ( $key === 'KEY_NAME' && $rule === 'noempty' ) return 'Please enter the item.';
+return $error;
+}
+add_filter( 'mwform_error_message_mw-wp-form-XXXXXXXXXX', 'englishform_error_message', 10, 3 );
+
+
+
+
+
+// ----------------------------------------
+// 管理画面
+// ----------------------------------------
+
+// 管理ツールバーを常に非表示
+// show_admin_bar( false );
+
+
+
+// 管理画面にファビコンを表示
+function admin_favicon() {
+	echo '<link rel="shortcut icon" type="image/x-icon" href="'.get_bloginfo('template_url').'/images/favicon.ico" />';
+}
+add_action('admin_head', 'admin_favicon');
+
+
+
+// 管理画面バー コメントの削除
+function remove_admin_bar_menu() {
+	global $wp_admin_bar;
+	$wp_admin_bar->remove_menu('new-content'); //新規追加ボタン
+}
+add_action( 'admin_bar_menu', 'remove_admin_bar_menu', 99 );
+
+
+
 //本体のアップデート通知を非表示
 add_filter( 'pre_site_transient_update_core', create_function( '$a', "return null;" ) );
 
@@ -175,6 +229,8 @@ add_filter( 'pre_site_transient_update_plugins', create_function( '$a', "return 
 //テーマ更新通知を非表示
 remove_action( 'load-update-core.php', 'wp_update_themes' );
 add_filter( 'pre_site_transient_update_themes', create_function( '$a', "return null;" ) );
+
+
 
 
 

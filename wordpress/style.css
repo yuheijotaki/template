@@ -69,6 +69,22 @@ img {
 	height: 0;
 }
 
+figure {
+	font-size: 0;
+	line-height: 0;
+}
+
+input[type="text"],
+input[type="button"],
+input[type="email"],
+input[type="submit"],
+textarea {
+	border-radius: 0;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
 
 
 
@@ -77,11 +93,11 @@ img {
 	responsive
 *****************************/
 
-@media screen and (min-width: 681px) {
-} /* 681px - */
+@media screen and (min-width: 769px) {
+} /* 769px - */
 
-@media screen and (max-width: 680px) {
-} /* - 680px */
+@media screen and (max-width: 768px) {
+} /* - 768px */
 
-@media screen and (min-width: 681px) and (max-width: 1028px) {
-} /* 681px - 1028px */
+@media screen and (min-width: 769px) and (max-width: 1028px) {
+} /* 769px - 1028px */
