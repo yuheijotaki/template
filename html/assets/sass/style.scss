@@ -1,0 +1,20 @@
+@charset "utf-8";
+
+// ===================================
+// FOUNDATION
+// ===================================
+@import "foundation/reset";  // スタイルリセット
+@import "foundation/config"; // 変数設定
+@import "foundation/mixin";  // mixin
+
+// ===================================
+// LAYOUT
+// ===================================
+@import "layout/common"; // 各ページ共通レイアウト
+@import "layout/header"; // ヘッダー
+@import "layout/footer"; // フッター
+
+// ===================================
+// COMPONENT
+// ===================================
+@import "component/componentName";

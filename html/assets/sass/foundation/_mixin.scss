@@ -1,0 +1,33 @@
+@charset "utf-8";
+
+// ===================================
+// Break Points
+// ===================================
+@mixin mq($breakpoint: tb) {
+  @media #{map-get($breakpoints, $breakpoint)} {
+    @content;
+  }
+}
+
+// usage
+// .hoge {
+//   background: red;
+//   @include mq {
+//     background: blue;
+//   }
+// }
+
+// ===================================
+// image
+// ===================================
+// imageItem
+@mixin imageItem {
+  font-size: 0;
+  line-height: 0;
+}
+
+// imageObject
+@mixin imageObject {
+  width: 100%;
+  height: auto;
+}
